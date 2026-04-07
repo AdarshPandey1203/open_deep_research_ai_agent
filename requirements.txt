@@ -1,0 +1,12 @@
+gunicorn
+gevent
+google-genai
+google-generativeai
+python-multipart
+beautifulsoup4
+requests
+flask
+python-dotenv
+duckduckgo-search
+PyPDF2
+python-docx
