@@ -1,184 +1,121 @@
-<<<<<<< HEAD
-# Deep Research AI Agent
+# 🔬 Open Deep Research AI Agent
 
-This project is a web-based AI chat application designed for deep research. It leverages the power of large language models (specifically Google's Gemini) to provide intelligent answers, summarize documents and web pages, and assist with research tasks.
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-3.x-black.svg)](https://flask.palletsprojects.com)
+[![Gemini](https://img.shields.io/badge/AI-Google%20Gemini-4285F4.svg)](https://ai.google.dev)
+[![arXiv](https://img.shields.io/badge/Papers-arXiv%20API-b31b1b.svg)](https://arxiv.org)
+[![Deploy on Render](https://img.shields.io/badge/Deploy-Render-46E3B7.svg)](https://render.com)
 
-The application is built with a Python Flask backend and a simple, clean frontend using vanilla JavaScript, HTML, and CSS.
+An autonomous multi-agent AI research assistant that conducts full literature reviews, synthesizes arXiv academic papers, scrapes live URLs, and answers document-grounded questions — all from a modern web interface.
 
-## Features
+---
 
-*   **Interactive Chat:** A user-friendly chat interface to interact with the AI.
-*   **File Upload for Context:** Upload documents (PDF, TXT, etc.) to provide context for your questions.
-*   **URL Scraping:** Provide a URL to have the AI read and analyze the content of a web page.
-*   **AI-Powered Responses:** Get intelligent and context-aware answers from the Gemini model.
-*   **Response Summarization:** Each AI response is accompanied by a short, concise summary.
-*   **Chat History:** Your conversations are automatically saved and can be revisited or deleted.
-*   **Theming:** Switch between light and dark modes for comfortable viewing.
+## ✨ Features
 
-## Installation
+- 🔬 **Deep Research Mode** — Autonomous 4-step pipeline: Plan → Search arXiv → Extract → Synthesize
+- ⚡ **Fast Chat Mode** — Quick Q&A, URL scraping, PDF/DOCX analysis
+- 📚 **arXiv Integration** — Fetches real peer-reviewed papers with abstracts & citations
+- 🌐 **Web Intelligence** — Scrapes and analyzes any URL
+- 📄 **Document RAG** — Upload PDF, DOCX, TXT for grounded answers
+- 💡 **Executive Summaries** — Every response summarized in 1-2 sentences
+- 📥 **Markdown Export** — Download full research sessions as `.md`
+- ⚙️ **Live API Key** — Set/update Gemini key from the UI without restart
+- 🌙 **Dark / Light Theme** — Persistent user preference
+- 🛡️ **Zero-Crash Fallback** — Works even without an API key (built-in synthesizer)
 
-Follow these steps to set up and run the project locally.
+---
 
-### Prerequisites
+## 📁 Project Structure
 
-*   Python 3.7+
-*   pip (Python package installer)
-
-### 1. Set Up the Environment
-
-Clone the repository or download the project files to your local machine. It is highly recommended to use a virtual environment to manage dependencies.
-
-```bash
-# Navigate to the project directory
-cd ai_agent
-
-# Create a virtual environment
-python -m venv venv
-
-# Activate the virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
+```
+open_deep_research_ai_agent/
+├── app.py                  # Flask backend (all routes & API endpoints)
+├── genai_client.py         # Gemini LLM client with auto-fallback
+├── research_summarizer.py  # 4-agent research pipeline (Plan→Search→Read→Write)
+├── search_tool.py          # arXiv + DuckDuckGo unified search
+├── scraper.py              # Resilient web scraper
+├── document_processor.py   # PDF, DOCX, TXT extractor
+├── summarizer.py           # Text summarization utilities
+├── memory.py               # Persistent JSON session memory
+├── frontend/
+│   ├── index.html          # Modern SPA interface
+│   ├── style.css           # Design system (dark/light, glassmorphism)
+│   └── script.js           # Client logic (chat, history, pipeline tracker)
+├── sessions/               # Auto-created: saved chat sessions
+├── uploads/                # Auto-created: uploaded document storage
+├── requirements.txt        # Python dependencies
+├── Procfile                # Render/Heroku process definition
+├── render.yaml             # Render Infrastructure-as-Code config
+└── Dockerfile              # Docker container spec
 ```
 
-### 2. Install Dependencies
+---
 
-Install all the required Python packages using the `requirements.txt` file.
+## 🚀 Deploy on Render (Free — Recommended)
+
+### Step 1 — Fork / Push to GitHub
+Make sure this repository is on your GitHub account.
+
+### Step 2 — Create a Render Web Service
+1. Go to [Render Dashboard](https://dashboard.render.com) → **New +** → **Web Service**
+2. Connect your GitHub repository
+3. Use these settings:
+
+| Setting | Value |
+|---|---|
+| **Runtime** | Python 3 |
+| **Build Command** | `pip install -r requirements.txt` |
+| **Start Command** | `gunicorn app:app --workers 2 --timeout 120 --bind 0.0.0.0:$PORT` |
+| **Plan** | Free |
+
+### Step 3 — Set Environment Variable
+In Render dashboard → **Environment** tab, add:
+
+| Key | Value |
+|---|---|
+| `GEMINI_API_KEY` | Your key from [Google AI Studio](https://aistudio.google.com/app/apikey) |
+| `PYTHON_VERSION` | `3.11.9` |
+
+### Step 4 — Deploy!
+Click **Create Web Service** — your live URL will be ready in ~2 minutes.
+
+> 💡 You can also set/update the API key directly in the app's **Settings ⚙️** menu without redeploying.
+
+---
+
+## 💻 Run Locally
 
 ```bash
+# 1. Clone
+git clone https://github.com/AdarshPandey1203/open_deep_research_ai_agent.git
+cd open_deep_research_ai_agent
+
+# 2. Install dependencies
 pip install -r requirements.txt
-```
 
-### 3. Configure API Key
+# 3. Set your API key
+cp .env.example .env
+# Edit .env and add: GEMINI_API_KEY="AIzaSy..."
 
-The application requires an API key for the Google Gemini model.
-
-1.  Create a file named `.env` in the root of the project directory.
-2.  Add your API key to the `.env` file as follows:
-
-```
-GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE"
-```
-
-Replace `"YOUR_GEMINI_API_KEY_HERE"` with your actual API key.
-
-## Usage
-
-Once the installation is complete, you can run the application.
-
-1.  Make sure your virtual environment is activated.
-2.  Run the Flask server:
-=======
-# Open Deep Research Agent
-
-This is a web-based research agent that can answer questions, summarize text, and perform web searches.
-
-## Features
-
-- **Chat Interface:** A simple, intuitive chat interface for interacting with the agent.
-- **File Upload:** Upload documents (PDF, DOCX) to provide context for your questions.
-- **Web Scraping:** Provide a URL and the agent will read the content of the page.
-- **Web Search:** The agent can perform web searches to answer questions.
-- **Summarization:** The agent can summarize long texts and research papers.
-- **Chat History:** Your conversations are saved and can be revisited later.
-
-## Running the Application
-
-### Prerequisites
-
-- Python 3.9 or higher
-- `pip` for installing Python packages
-
-### Installation
-
-1.  **Clone the repository:**
-
-    ```bash
-    git clone https://github.com/your-username/open_deep_research_agent.git
-    cd open_deep_research_agent
-    ```
-
-2.  **Create a virtual environment:**
-
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-    ```
-
-3.  **Install the dependencies:**
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  **Create a `.env` file:**
-
-    Create a `.env` file in the root of the project and add your Google Generative AI API key:
-
-    ```
-    GEMINI_API_KEY=your-api-key
-    ```
-
-### Running the Development Server
->>>>>>> 8a15bb9 (feat: Deploy on Render)
-
-```bash
+# 4. Run
 python app.py
 ```
 
-<<<<<<< HEAD
-3.  Open your web browser and navigate to:
+Open → **http://127.0.0.1:5001**
 
+---
+
+## 🐳 Docker
+
+```bash
+docker build -t deep-research-agent .
+docker run -p 5001:5001 -e GEMINI_API_KEY="your_key_here" deep-research-agent
 ```
-http://127.0.0.1:5001
-```
 
-You can now start chatting with the Deep Research AI Agent!
+---
 
-## Project Structure
+## 🔑 Get a Free Gemini API Key
 
-```
-.
-├── app.py              # Main Flask application file, handles routing and core logic.
-├── document_processor.py # Handles reading and processing uploaded documents.
-├── genai_client.py     # Client for interacting with the Google Gemini API.
-├── memory.py           # Manages the chat history for different sessions.
-├── research_summarizer.py # Logic for summarizing research topics.
-├── scraper.py          # Scrapes text content from URLs.
-├── search_tool.py      # Provides web search functionality.
-├── summarizer.py       # General text summarization utilities.
-├── requirements.txt    # Lists the Python dependencies for the project.
-├── .env                # (To be created) Stores environment variables like API keys.
-├── frontend/           # Contains all frontend files (HTML, CSS, JavaScript).
-│   ├── index.html      # The main HTML structure of the chat interface.
-│   ├── script.js       # Handles all client-side logic and interactivity.
-│   └── style.css       # Styles for the web interface.
-├── sessions/           # Stores chat history as JSON files.
-└── uploads/            # Default directory for storing uploaded files.
-
-```
-=======
-The application will be available at `http://localhost:5001`.
-
-## Deployment on Render
-
-This application is configured for deployment on [Render](https://render.com/).
-
-### Prerequisites
-
-- A Render account
-- The project pushed to a GitHub repository
-
-### Deployment Steps
-
-1.  **Create a new Web Service on Render.**
-2.  **Connect your GitHub repository.**
-3.  **Use the following settings:**
-    -   **Environment:** `Docker`
-    -   **Start Command:** `./run_production.sh`
-4.  **Add your `GEMINI_API_KEY` as an environment variable in the Render dashboard.**
-5.  **Deploy the application.**
-
-Render will automatically build the Docker image and deploy the application.
->>>>>>> 8a15bb9 (feat: Deploy on Render)
+1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Click **Create API Key**
+3. Paste it in `.env` **or** directly in the app's ⚙️ Settings modal

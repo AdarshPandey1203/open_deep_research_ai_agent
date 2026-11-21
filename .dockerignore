@@ -1,27 +1,16 @@
-# Git
-.git
-.gitignore
-
-# Python
-__pycache__/
+__pycache__
 *.pyc
 *.pyo
 *.pyd
 .Python
 env/
 venv/
-
-# Docker
-Dockerfile
-.dockerignore
-
-# Other
-.idea/
-.vscode/
-*.swp
-*.swo
-*.swn
+.venv/
+.git
+.gitignore
+.env
 *.log
+error.log
+output.log
 sessions/
 uploads/
-.env

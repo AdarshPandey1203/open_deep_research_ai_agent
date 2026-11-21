@@ -1,52 +1,328 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deep Research AI Agent</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Research AI Agent | Autonomous Scientific Assistant</title>
+    
+    <!-- Modern Typography: Plus Jakarta Sans & Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Markdown Parser & Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="main-container">
-    <div class="sidebar">
-        <h2>Chat History</h2>
-        <ul id="historyList"></ul>
-        <div class="theme-toggle">
-            <input type="checkbox" id="themeToggle" class="checkbox">
-            <label for="themeToggle" class="label"></label>
-        </div>
-        <button id="newChatBtn">New Chat</button>
-        <button id="clearHistoryBtn">Clear History</button>
-    </div>
-    <div class="container">
-        <button id="sidebarToggle" class="sidebar-toggle-btn">&#9776;</button>
-        <h1>Deep Research AI Agent</h1>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-avatar">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v8"></path>
+                            <path d="m4.93 10.93 1.41 1.41"></path>
+                            <path d="M2 18h2"></path>
+                            <path d="M20 18h2"></path>
+                            <path d="m19.07 10.93-1.41 1.41"></path>
+                            <path d="M22 22H2"></path>
+                            <path d="m8 22 4-10 4 10"></path>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        <h2>Deep Research</h2>
+                        <span class="brand-badge">Autonomous AI</span>
+                    </div>
+                </div>
+                
+                <button id="newChatBtn" class="btn btn-primary btn-new-chat" title="Start a fresh research topic">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>New Research</span>
+                </button>
+            </div>
 
-        <div id="outputBox" class="hidden">
-            <div id="outputText"></div>
-            <div id="summary"></div>
-            <div id="researchPapers"></div>
-            <div class="output-actions">
-                <span id="copyBtn" class="output-icon" title="Copy Output">📋</span>
-                <span id="shareBtn" class="output-icon" title="Share Output">📤</span>
+            <!-- Search Chat History -->
+            <div class="sidebar-search">
+                <div class="search-input-box">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="historySearchInput" placeholder="Search sessions...">
+                </div>
+            </div>
+
+            <div class="sidebar-section-title">
+                <span>Recent Research</span>
+                <span id="historyCountBadge" class="count-pill">0</span>
+            </div>
+            
+            <div class="history-container">
+                <ul id="historyList" class="history-list">
+                    <!-- Dynamic sessions inserted here -->
+                </ul>
+            </div>
+
+            <div class="sidebar-footer">
+                <button id="settingsBtn" class="sidebar-action-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    <span>API & Settings</span>
+                </button>
+                <button id="clearHistoryBtn" class="sidebar-action-btn text-danger">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    <span>Clear All Chats</span>
+                </button>
+                <div class="theme-row">
+                    <span>Interface Theme</span>
+                    <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+                        <span id="themeIcon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Modern Top Navigation -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button id="sidebarToggle" class="icon-btn" title="Toggle Sidebar (Ctrl+B)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="session-meta">
+                        <h1 id="sessionTitle" class="session-title">Research Studio</h1>
+                        <span class="status-indicator">
+                            <span class="pulse-dot"></span>
+                            <span id="systemStatusLabel">Ready</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Mode Selector Pills -->
+                <div class="topbar-center">
+                    <div class="mode-tabs">
+                        <button class="mode-tab active" data-mode="deep_research" id="modeDeepResearch">
+                            <span class="tab-icon">🔬</span>
+                            <span class="tab-text">Deep Research</span>
+                        </button>
+                        <button class="mode-tab" data-mode="chat" id="modeChat">
+                            <span class="tab-icon">⚡</span>
+                            <span class="tab-text">Fast Chat</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <button id="exportBtn" class="btn btn-secondary btn-sm" title="Download Session as Markdown">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Export .MD</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Chat & Results Viewport -->
+            <div class="chat-viewport" id="chatViewport">
+                <!-- Hero / Welcome State -->
+                <div id="heroState" class="hero-state">
+                    <div class="hero-badge">
+                        <span class="badge-sparkle">✨</span>
+                        <span>Multi-Agent Research Framework & arXiv Search</span>
+                    </div>
+                    
+                    <h2 class="hero-heading">Explore Scientific Frontiers with <span class="gradient-text">Autonomous AI</span></h2>
+                    <p class="hero-subtext">Decompose complex topics, query peer-reviewed arXiv literature, scrape live web content, and generate rigorous scientific syntheses in seconds.</p>
+                    
+                    <!-- Capability Badges -->
+                    <div class="hero-capabilities">
+                        <div class="cap-pill">📚 arXiv Papers</div>
+                        <div class="cap-pill">🌐 Live Web Scraper</div>
+                        <div class="cap-pill">📑 PDF Context RAG</div>
+                        <div class="cap-pill">💡 Executive Summaries</div>
+                        <div class="cap-pill">📥 Markdown Export</div>
+                    </div>
+
+                    <!-- Prompt Inspiration Cards -->
+                    <div class="feature-grid">
+                        <div class="feature-card" onclick="setQuery('Recent Breakthroughs in Quantum Error Correction and Fault-Tolerant Architectures')">
+                            <div class="card-top">
+                                <span class="feature-icon">⚛️</span>
+                                <span class="card-tag">Quantum Physics</span>
+                            </div>
+                            <h4>Quantum Error Correction</h4>
+                            <p>Synthesize arXiv preprints on surface codes and physical qubit stability.</p>
+                            <span class="card-action">Launch Research &rarr;</span>
+                        </div>
+
+                        <div class="feature-card" onclick="setQuery('Autonomous Multi-Agent Collaboration and Consensus Mechanisms in LLMs')">
+                            <div class="card-top">
+                                <span class="feature-icon">🤖</span>
+                                <span class="card-tag">Artificial Intelligence</span>
+                            </div>
+                            <h4>Multi-Agent Systems</h4>
+                            <p>Examine cognitive planning, reflection loops, and swarm architectures.</p>
+                            <span class="card-action">Launch Research &rarr;</span>
+                        </div>
+
+                        <div class="feature-card" onclick="setQuery('Efficient Attention Mechanisms and State Space Models (Mamba vs Transformers)')">
+                            <div class="card-top">
+                                <span class="feature-icon">⚡</span>
+                                <span class="card-tag">Deep Learning</span>
+                            </div>
+                            <h4>Transformers vs Mamba</h4>
+                            <p>Compare linear complexity, memory footprint, and long-context scaling.</p>
+                            <span class="card-action">Launch Research &rarr;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Stream -->
+                <div id="messagesList" class="messages-list"></div>
+
+                <!-- Autonomous Research Progress Visualizer -->
+                <div id="researchProgress" class="research-progress hidden">
+                    <div class="progress-header">
+                        <div class="spinner-ring"></div>
+                        <div class="progress-label-group">
+                            <span class="progress-main-title">Autonomous Research Pipeline Active</span>
+                            <span id="progressText" class="progress-subtitle">Decomposing research query...</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-steps-row">
+                        <div class="pipeline-step active" id="step1">
+                            <div class="step-circle">1</div>
+                            <div class="step-info">
+                                <span class="step-name">Planning</span>
+                                <span class="step-desc">Sub-Queries</span>
+                            </div>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="pipeline-step" id="step2">
+                            <div class="step-circle">2</div>
+                            <div class="step-info">
+                                <span class="step-name">Searching</span>
+                                <span class="step-desc">arXiv & Web</span>
+                            </div>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="pipeline-step" id="step3">
+                            <div class="step-circle">3</div>
+                            <div class="step-info">
+                                <span class="step-name">Reading</span>
+                                <span class="step-desc">Extracting</span>
+                            </div>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="pipeline-step" id="step4">
+                            <div class="step-circle">4</div>
+                            <div class="step-info">
+                                <span class="step-name">Synthesis</span>
+                                <span class="step-desc">Peer Report</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Input Capsule -->
+            <footer class="input-section">
+                <div class="input-card" id="inputCard">
+                    <!-- Attached File Chips Container -->
+                    <div class="attached-files-row" id="attachedFilesRow"></div>
+
+                    <div class="input-inner">
+                        <button id="attachBtn" class="action-icon-btn" title="Attach documents (PDF, DOCX, TXT)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                            </svg>
+                        </button>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc,.txt,.md,.csv,.json" class="hidden-input">
+                        
+                        <textarea 
+                            id="queryInput" 
+                            placeholder="Enter a research topic, ask a question, or paste a URL..." 
+                            rows="1"
+                        ></textarea>
+                        
+                        <button id="sendBtn" class="send-btn" title="Submit Research Request (Enter)">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="input-footer-bar">
+                        <span class="hint-text">
+                            <span class="kbd">Shift + Enter</span> for new line &bull; Paste URLs for instant web scraping
+                        </span>
+                        <div class="active-mode-badge" id="activeModeBadge">
+                            <span>Mode: <b>Deep Research</b></span>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- API Settings Modal -->
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span class="modal-icon">⚙️</span>
+                    <h3>Gemini API & System Settings</h3>
+                </div>
+                <button id="closeModalBtn" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">
+                    Connect your free Google Gemini API key to activate real-time LLM reasoning. Obtain your key at 
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio</a>.
+                </p>
+                <div class="form-group">
+                    <label for="apiKeyInput">Google Gemini API Key</label>
+                    <div class="input-with-button">
+                        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="form-control">
+                        <button id="toggleKeyVisibility" class="btn btn-secondary btn-sm" type="button">👁️</button>
+                    </div>
+                </div>
+                <div id="apiStatusMessage" class="status-msg"></div>
+                <div class="settings-info-box">
+                    <strong>🛡️ Zero-Crash Guarantee:</strong> Even if your key is missing or expired, our built-in Research Engine synthesizes literature and runs workflows without interruption.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveKeyBtn" class="btn btn-primary">Save API Key</button>
             </div>
         </div>
-        
-        <div id="loading" class="hidden">
-            <p>⏳ Processing your research...</p>
-        </div>
+    </div>
 
-                    <div class="input-area">
-                        <textarea id="query" placeholder="Type your research question here..."></textarea>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="fileInput" multiple class="hidden-file-input">
-                            <button id="customFileInputButton" type="button">📎 Attach Files</button>
-                            <span id="selectedFilesDisplay"></span>
-                        </div>
-                        <button id="submitBtn">Send</button>
-                    </div>    </div>
-</div>
-<script src="script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Global Toast Notifications -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>

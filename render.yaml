@@ -1,9 +1,13 @@
 services:
   - type: web
-    name: open-deep-research-agent
-    env: docker
+    name: open-deep-research-ai-agent
+    env: python
+    region: oregon
     plan: free
-    healthCheckPath: /
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 2 --timeout 120 --bind 0.0.0.0:$PORT
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: GEMINI_API_KEY
         sync: false
